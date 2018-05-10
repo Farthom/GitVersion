@@ -23,41 +23,34 @@ string buildDir = "./build/";
 void Build(string configuration, string nugetVersion, string semVersion, string version, string preReleaseTag)
 {
 	var settings = new DotNetCoreMSBuildSettings()
-     .SetConfiguration(configuration)
-     .WithTarget("Build")
-	 .WithProperty("POSIX",IsRunningOnUnix().ToString());
-	 
+		.SetConfiguration(configuration)
+		//.SetVerbosity(Verbosity.Minimal)
+		.WithTarget("Build")
+		.WithProperty("POSIX",IsRunningOnUnix().ToString());
+		
+		if (BuildSystem.AppVeyor.IsRunningOnAppVeyor)
+		{
+			if (!string.IsNullOrWhiteSpace(nugetVersion))
+			{
+				settings.WithProperty("GitVersion_NuGetVersion", nugetVersion);
+			}
+			if (!string.IsNullOrWhiteSpace(semVersion))
+			{
+				settings.WithProperty("GitVersion_SemVer", semVersion);
+			}
+
+			if (!string.IsNullOrWhiteSpace(version))
+			{
+				settings.WithProperty("GitVersion_MajorMinorPatch", version);
+			}
+
+			if (!string.IsNullOrWhiteSpace(preReleaseTag))
+			{
+				settings.WithProperty("GitVersion_PreReleaseTag", preReleaseTag);
+			}
+		}
 	 
 	 DotNetCoreMSBuild("./src/GitVersion.sln", settings);
-    // DotNetCoreBuild("./src/GitVersion.sln", settings =>
-	// {
-	 // settings.SetConfiguration(configuration)
-        // .SetVerbosity(Verbosity.Minimal)
-        // .WithTarget("Build")
-        // .WithProperty("POSIX",IsRunningOnUnix().ToString());
-		
-		// if (BuildSystem.AppVeyor.IsRunningOnAppVeyor)
-		// {
-			// if (!string.IsNullOrWhiteSpace(nugetVersion))
-			// {
-				// settings.WithProperty("GitVersion_NuGetVersion", nugetVersion);
-			// }
-			// if (!string.IsNullOrWhiteSpace(semVersion))
-			// {
-				// settings.WithProperty("GitVersion_SemVer", semVersion);
-			// }
-
-			// if (!string.IsNullOrWhiteSpace(version))
-			// {
-				// settings.WithProperty("GitVersion_MajorMinorPatch", version);
-			// }
-
-			// if (!string.IsNullOrWhiteSpace(preReleaseTag))
-			// {
-				// settings.WithProperty("GitVersion_PreReleaseTag", preReleaseTag);
-			// }
-        // }		
-	// }); 
 }
 
 // This build task can be run to just build
