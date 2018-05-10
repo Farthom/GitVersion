@@ -22,13 +22,11 @@ string buildDir = "./build/";
 
 void Build(string configuration, string nugetVersion, string semVersion, string version, string preReleaseTag)
 {
-
-    DotNetBuild("./src/GitVersion.sln", settings =>
-	{
-	 settings.SetConfiguration(configuration)
-        .SetVerbosity(Verbosity.Minimal)
-        .WithTarget("Build")
-        .WithProperty("POSIX",IsRunningOnUnix().ToString());
+	var settings = new DotNetCoreMSBuildSettings()
+		.SetConfiguration(configuration)
+		//.SetVerbosity(Verbosity.Minimal)
+		.WithTarget("Build")
+		.WithProperty("POSIX",IsRunningOnUnix().ToString());
 		
 		if (BuildSystem.AppVeyor.IsRunningOnAppVeyor)
 		{
@@ -50,8 +48,9 @@ void Build(string configuration, string nugetVersion, string semVersion, string 
 			{
 				settings.WithProperty("GitVersion_PreReleaseTag", preReleaseTag);
 			}
-        }		
-	}); 
+		}
+	 
+	 DotNetCoreMSBuild("./src/GitVersion.sln", settings);
 }
 
 // This build task can be run to just build
