@@ -22,36 +22,42 @@ string buildDir = "./build/";
 
 void Build(string configuration, string nugetVersion, string semVersion, string version, string preReleaseTag)
 {
-
-    DotNetBuild("./src/GitVersion.sln", settings =>
-	{
-	 settings.SetConfiguration(configuration)
-        .SetVerbosity(Verbosity.Minimal)
-        .WithTarget("Build")
-        .WithProperty("POSIX",IsRunningOnUnix().ToString());
+	var settings = new DotNetCoreMSBuildSettings()
+     .SetConfiguration(configuration)
+     .WithTarget("Build")
+	 .WithProperty("POSIX",IsRunningOnUnix().ToString());
+	 
+	 
+	 DotNetCoreMSBuild("./src/GitVersion.sln", settings);
+    // DotNetCoreBuild("./src/GitVersion.sln", settings =>
+	// {
+	 // settings.SetConfiguration(configuration)
+        // .SetVerbosity(Verbosity.Minimal)
+        // .WithTarget("Build")
+        // .WithProperty("POSIX",IsRunningOnUnix().ToString());
 		
-		if (BuildSystem.AppVeyor.IsRunningOnAppVeyor)
-		{
-			if (!string.IsNullOrWhiteSpace(nugetVersion))
-			{
-				settings.WithProperty("GitVersion_NuGetVersion", nugetVersion);
-			}
-			if (!string.IsNullOrWhiteSpace(semVersion))
-			{
-				settings.WithProperty("GitVersion_SemVer", semVersion);
-			}
+		// if (BuildSystem.AppVeyor.IsRunningOnAppVeyor)
+		// {
+			// if (!string.IsNullOrWhiteSpace(nugetVersion))
+			// {
+				// settings.WithProperty("GitVersion_NuGetVersion", nugetVersion);
+			// }
+			// if (!string.IsNullOrWhiteSpace(semVersion))
+			// {
+				// settings.WithProperty("GitVersion_SemVer", semVersion);
+			// }
 
-			if (!string.IsNullOrWhiteSpace(version))
-			{
-				settings.WithProperty("GitVersion_MajorMinorPatch", version);
-			}
+			// if (!string.IsNullOrWhiteSpace(version))
+			// {
+				// settings.WithProperty("GitVersion_MajorMinorPatch", version);
+			// }
 
-			if (!string.IsNullOrWhiteSpace(preReleaseTag))
-			{
-				settings.WithProperty("GitVersion_PreReleaseTag", preReleaseTag);
-			}
-        }		
-	}); 
+			// if (!string.IsNullOrWhiteSpace(preReleaseTag))
+			// {
+				// settings.WithProperty("GitVersion_PreReleaseTag", preReleaseTag);
+			// }
+        // }		
+	// }); 
 }
 
 // This build task can be run to just build
