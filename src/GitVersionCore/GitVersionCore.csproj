@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.3;net40</TargetFrameworks>    
+    <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>    
     <OutputType>Library</OutputType>
     <RootNamespace>GitVersion</RootNamespace>
     <AssemblyName>GitVersionCore</AssemblyName>
@@ -29,8 +29,9 @@
     <GenerateNeutralResourcesLanguageAttribute Condition="'$(GenerateNeutralResourcesLanguageAttribute)' == ''">true</GenerateNeutralResourcesLanguageAttribute>
   </PropertyGroup>
  
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net40'">
-    <DefineConstants>TRACE;NET40;NETDESKTOP</DefineConstants>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net45'">
+    <DefineConstants>TRACE;NET45;NETDESKTOP</DefineConstants>
+	
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
@@ -57,21 +58,6 @@
     <PackageReference Include="GitTools.Core" Version="$(PackageVersion_GitToolsCore)" />
     <PackageReference Include="YamlDotNet" Version="$(PackageVersion_YamlDotNet)" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="$(PackageVersion_LibGit2SharpNativeBinaries)" PrivateAssets="contentFiles" />  
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net40' ">
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    
-    
-    <PackageReference Include="AsyncBridge" Version="0.1.1">
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
